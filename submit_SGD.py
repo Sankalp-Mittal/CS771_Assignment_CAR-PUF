@@ -39,10 +39,10 @@ def my_fit( X_train, y_train ):
 	# print(y_train)
 
 	# print(X_train_mapped.shape, y_train.shape)
-	sgd_classifier = SGDClassifier(loss='modified_huber', alpha=0.0001, max_iter=1000, random_state=42)	
+	sgd_classifier = SGDClassifier(loss='hinge', alpha=0.0001, max_iter=1000, random_state=42, penalty='l1', tol=1e-1)	
 	sgd_classifier.fit(X_train_mapped, y_train)
 
-	w = sgd_classifier.coef_
+	w = sgd_classifier.coef_[0]
 	b = sgd_classifier.intercept_
 
 	# print(w.shape, b.shape,sgd_classifier.n_iter_)
@@ -80,7 +80,7 @@ def my_fit( X_train, y_train ):
 	
 	# THE RETURNED MODEL SHOULD BE A SINGLE VECTOR AND A BIAS TERM
 	# If you do not wish to use a bias term, set it to 0
-	return np.transpose(w), b
+	return w, b
 
 
 ################################
