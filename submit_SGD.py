@@ -45,30 +45,30 @@ def my_fit( X_train, y_train ):
 	w = sgd_classifier.coef_
 	b = sgd_classifier.intercept_
 
-	print(w.shape, b.shape,sgd_classifier.n_iter_)
+	# print(w.shape, b.shape,sgd_classifier.n_iter_)
 
-	test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
-	X_test = test_data[:,:-1]
-	y_test = test_data[:,-1]
-	y_test = 2*y_test - 1
-	X_test_mapped = np.array([my_map(X_test[i]) for i in range(len(X_test))])
+	# test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
+	# X_test = test_data[:,:-1]
+	# y_test = test_data[:,-1]
+	# y_test = 2*y_test - 1
+	# X_test_mapped = np.array([my_map(X_test[i]) for i in range(len(X_test))])
 
 	
-	y_pred = sgd_classifier.predict(X_test_mapped)
-	# Evaluate the model
-	accuracy = metrics.accuracy_score(y_test, y_pred)
-	conf_matrix = metrics.confusion_matrix(y_test, y_pred)
+	# y_pred = sgd_classifier.predict(X_test_mapped)
+	# # Evaluate the model
+	# accuracy = metrics.accuracy_score(y_test, y_pred)
+	# conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 
-	print(f"Accuracy Test: {accuracy}")
-	print(f"Confusion Matrix Test:\n{conf_matrix}")
+	# print(f"Accuracy Test: {accuracy}")
+	# print(f"Confusion Matrix Test:\n{conf_matrix}")
       
-	y_pred = sgd_classifier.predict(X_train_mapped)
-	# Evaluate the model
-	accuracy = metrics.accuracy_score(y_train, y_pred)
-	conf_matrix = metrics.confusion_matrix(y_train, y_pred)
+	# y_pred = sgd_classifier.predict(X_train_mapped)
+	# # Evaluate the model
+	# accuracy = metrics.accuracy_score(y_train, y_pred)
+	# conf_matrix = metrics.confusion_matrix(y_train, y_pred)
 	
-	print(f"Accuracy Train: {accuracy}")
-	print(f"Confusion Matrix Train:\n{conf_matrix}")
+	# print(f"Accuracy Train: {accuracy}")
+	# print(f"Confusion Matrix Train:\n{conf_matrix}")
 
 
 	# Use this method to create features.
@@ -80,7 +80,7 @@ def my_fit( X_train, y_train ):
 	
 	# THE RETURNED MODEL SHOULD BE A SINGLE VECTOR AND A BIAS TERM
 	# If you do not wish to use a bias term, set it to 0
-	return w, b
+	return np.transpose(w), b
 
 
 ################################
