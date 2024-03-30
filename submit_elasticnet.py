@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn import linear_model, metrics
-from sklearn.model_selection import GridSearchCV
 from scipy.linalg import khatri_rao
 
 # You are allowed to import any submodules of sklearn that learn linear models e.g. sklearn.svm etc
