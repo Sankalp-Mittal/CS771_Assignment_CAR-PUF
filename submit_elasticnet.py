@@ -45,35 +45,35 @@ def my_fit( X_train, y_train ):
 	print(y_train)
       
 	# Define ElasticNet model
-	clf = linear_model.ElasticNet(alpha = 0.0171, l1_ratio=0.47)
-	clf.fit(X_train_mapped, y_train)
+	el_clf = linear_model.ElasticNet(alpha = 0.0171, l1_ratio=0.47)
+	el_clf.fit(X_train_mapped, y_train)
     
-	w = clf.coef_
-	b = clf.intercept_
+	w = el_clf.coef_
+	b = el_clf.intercept_
 	
-	print(w.shape, b.shape, clf.n_iter_)
+	#print(w.shape, b.shape, clf.n_iter_)
 
-	test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
-	X_test = test_data[:,:-1]
-	y_test = test_data[:,-1]
-	y_test = 2*y_test - 1
-	X_test_mapped = np.array([my_map(X_test[i]) for i in range(len(X_test))])
+	#test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
+	#X_test = test_data[:,:-1]
+	#y_test = test_data[:,-1]
+	#y_test = 2*y_test - 1
+	#X_test_mapped = np.array([my_map(X_test[i]) for i in range(len(X_test))])
 	
-	y_pred = clf.predict(X_test_mapped); y_pred = np.array([sign(y_pred[i]) for i in range(len(y_pred))])
+	#y_pred = el_clf.predict(X_test_mapped); y_pred = np.array([sign(y_pred[i]) for i in range(len(y_pred))])
 	# Evaluate the model
-	accuracy = metrics.accuracy_score(y_test, y_pred)
-	conf_matrix = metrics.confusion_matrix(y_test, y_pred)
+	#accuracy = metrics.accuracy_score(y_test, y_pred)
+	#conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 
-	print(f"Accuracy Test: {accuracy}")
-	print(f"Confusion Matrix Test:\n{conf_matrix}")
+	#print(f"Accuracy Test: {accuracy}")
+	#print(f"Confusion Matrix Test:\n{conf_matrix}")
       
-	y_pred = clf.predict(X_train_mapped); y_pred = np.array([sign(y_pred[i]) for i in range(len(y_pred))])
+	#y_pred = el_clf.predict(X_train_mapped); y_pred = np.array([sign(y_pred[i]) for i in range(len(y_pred))])
 	# Evaluate the model
-	accuracy = metrics.accuracy_score(y_train, y_pred)
-	conf_matrix = metrics.confusion_matrix(y_train, y_pred)
+	#accuracy = metrics.accuracy_score(y_train, y_pred)
+	#conf_matrix = metrics.confusion_matrix(y_train, y_pred)
 	
-	print(f"Accuracy Train: {accuracy}")
-	print(f"Confusion Matrix Train:\n{conf_matrix}")
+	#print(f"Accuracy Train: {accuracy}")
+	#print(f"Confusion Matrix Train:\n{conf_matrix}")
 
 	return w, b
 
@@ -88,25 +88,47 @@ def my_map( X ):
 
 	# Use this method to create features.
 	# It is likely that my_fit will internally call my_map to create features for train points
-	X = np.array(X)
-	d = 1 - 2 * X
-	t = np.ones(32)
-	t = np.cumprod(d[::-1])[::-1]
-	matrix = np.triu(np.outer(t, t))
-	feat = matrix[np.triu_indices(matrix.shape[0])]
-	feat = np.concatenate((feat, t))
-	del t, d, X
+	X = np.array(X) 
+	  
+	if X.ndim == 1:
+		d = 1 - 2 * X
+		t = np.ones(32)
+		t = np.cumprod(d[::-1])[::-1]
+		matrix = np.triu(np.outer(t, t),1)
+		feat = matrix[np.triu_indices(matrix.shape[0],1)]
+		feat = np.concatenate((feat, t))
+		del t, d, matrix
+    
+	else:
+        
+		for i in range(len(X)):
+			d = 1 - 2 * X[i]
+			t = np.ones(32)
+			t = np.cumprod(d[::-1])[::-1]
+			matrix = np.triu(np.outer(t, t),1)
+			matrix = matrix[np.triu_indices(matrix.shape[0],1)]
+			matrix = np.concatenate((matrix, t))
+			if i == 0:
+				feat = matrix
+			else:
+				feat = np.vstack((feat, matrix))
+			del t, d, matrix 
+	# Use this method to create features.
+	# It is likely that my_fit will internally call my_map to create features for train points
+	
 	return feat
 
-train_data = np.genfromtxt('train.dat', delimiter=' ', dtype=None)
-X_train = train_data[:,:-1]
+#train_data = np.genfromtxt('train.dat', delimiter=' ', dtype=None)
+#X_train = train_data[:,:-1]
 # print(X_train.shape)
-y_train = train_data[:,-1]
-w,b = my_fit(X_train, y_train)
-print(b)
+#y_train = train_data[:,-1]
+#w,b = my_fit(X_train, y_train)
+#print(b)
 
-num = 0 
-for i in range(len(w)):
-	if w[i] != 0:
-		num+=1
-print(num)
+#num = 0 
+#for i in range(len(w)):
+#	if w[i] != 0:
+#		num+=1
+#print(num)
+
+
