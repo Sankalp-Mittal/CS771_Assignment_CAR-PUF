@@ -1,4 +1,23 @@
+import numpy as np
+from sklearn import linear_model, metrics
+from sklearn.linear_model import SGDClassifier
+from scipy.linalg import khatri_rao
 
+# You are allowed to import any submodules of sklearn that learn linear models e.g. sklearn.svm etc
+# You are not allowed to use other libraries such as keras, tensorflow etc
+# You are not allowed to use any scipy routine other than khatri_rao
+
+# SUBMIT YOUR CODE AS A SINGLE PYTHON (.PY) FILE INSIDE A ZIP ARCHIVE
+# THE NAME OF THE PYTHON FILE MUST BE submit.py
+
+# DO NOT CHANGE THE NAME OF THE METHODS my_fit, my_map etc BELOW
+# THESE WILL BE INVOKED BY THE EVALUATION SCRIPT. CHANGING THESE NAMES WILL CAUSE EVALUATION FAILURE
+
+# You may define any new functions, variables, classes here
+# For example, functions to calculate next coordinate or step length
+
+def sign(x):
+    if x > 0:
         return 1
     elif x < 0:
         return -1
