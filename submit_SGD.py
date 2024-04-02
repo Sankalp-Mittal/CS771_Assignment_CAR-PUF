@@ -102,19 +102,19 @@ def my_map( X ):
 		del t, d, matrix
     
 	else:
-        
-		for i in range(len(X)):
-			d = 1 - 2 * X[i]
-			t = np.ones(32)
-			t = np.cumprod(d[::-1])[::-1]
-			matrix = np.triu(np.outer(t, t),1)
-			matrix = matrix[np.triu_indices(matrix.shape[0],1)]
-			matrix = np.concatenate((matrix, t))
-			if i == 0:
-				feat = matrix
-			else:
-				feat = np.vstack((feat, matrix))
-			del t, d, matrix 
+		feat = np.array([my_map(X[i]) for i in range(len(X))])
+		# for i in range(len(X)):
+		# 	d = 1 - 2 * X[i]
+		# 	t = np.ones(32)
+		# 	t = np.cumprod(d[::-1])[::-1]
+		# 	matrix = np.triu(np.outer(t, t),1)
+		# 	matrix = matrix[np.triu_indices(matrix.shape[0],1)]
+		# 	matrix = np.concatenate((matrix, t))
+		# 	if i == 0:
+		# 		feat = matrix
+		# 	else:
+		# 		feat = np.vstack((feat, matrix))
+		# 	del t, d, matrix 
 	# Use this method to create features.
 	# It is likely that my_fit will internally call my_map to create features for train points
 	
@@ -133,3 +133,18 @@ def my_map( X ):
 # 	if w[0][i] != 0:
 # 		num += 1
 # print(num)
+
+# def my_map_khatri_rao (X):
+# 	X = np.array(X)
+# 	X = np.transpose(X)
+# 	ones_row = np.ones((1, X.shape[1]))
+# 	X = np.vstack((X, ones_row))
+# 	multiplied = khatri_rao(X, X)
+# 	print(multiplied.shape)
+# 	return multiplied
+
+# train_data = np.genfromtxt('train.dat', delimiter=' ', dtype=None)
+# X_train = train_data[:,:-1]
+# print(X_train.shape)
+# y_train = train_data[:,-1]
+# my_map_khatri_rao(X_train)
