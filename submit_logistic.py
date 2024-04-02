@@ -2,8 +2,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import GridSearchCV
-from scipy.linalg import khatri_rao
+# from scipy.linalg import khatri_rao
 
 # You are allowed to import any submodules of sklearn that learn linear models e.g. sklearn.svm etc
 # You are not allowed to use other libraries such as keras, tensorflow etc
@@ -45,28 +44,22 @@ def my_fit( X_train, y_train ):
 	X_train_scaled = scaler.fit_transform(X_train_mapped)
 	# X_test_scaled = scaler.transform(X_test)
 
-	# Define the parameter grid for tuning
-	param_grid = {
-		'C': [0.001, 0.01, 0.1, 1, 10, 100],  # Regularization parameter
-	}
+	C_value = 100
 
-	# Creating and training the model with GridSearchCV for hyperparameter tuning
-	grid_search = GridSearchCV(LogisticRegression(solver='lbfgs'), param_grid, cv=5, scoring='accuracy')
-	grid_search.fit(X_train_scaled, y_train)
-
-	# Best hyperparameters
-	print("Best hyperparameters:", grid_search.best_params_)
-
-	# Making predictions with the best model
-	best_model = grid_search.best_estimator_
-	# y_pred = best_model.predict(X_test_scaled)
+	logistic_regression = LogisticRegression(solver='lbfgs', C=C_value, tol=1e-5)
+	
+	logistic_regression.fit(X_train_scaled, y_train)
+	# y_pred_trn = logistic_regression.predict(X_train_scaled)
+	# y_pred = logistic_regression.predict(X_test_scaled)
 
 	# # Evaluating the model
-	# accuracy = accuracy_score(y_test, y_pred)
-	# print("Accuracy:", accuracy)
+	# accuracy_train = accuracy_score(y_train, y_pred_trn)
+	# accuracy_test = accuracy_score(y_test, y_pred)
+	# print("Train Accuracy:", 100*accuracy_train)
+	# print("Test Accuracy:", 100*accuracy_test)
 
-	w = best_model.coef_
-	b = best_model.intercept_
+	w = logistic_regression.coef_[0]
+	b = logistic_regression.intercept_
 
 	return w, b
 
