@@ -30,20 +30,20 @@ def my_fit( X_train, y_train ):
 		X_train_mapped.append(my_map(X_train[i]))
 	X_train_mapped = np.array(X_train_mapped)
 	
-	# Load testing data
-	test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
+	# # Load testing data
+	# test_data = np.genfromtxt('test.dat', delimiter=' ', dtype=None)
 
-	X_test = []
-	for i in range(len(test_data)):
-		X_test.append(my_map(test_data[i][:-1]))
-	X_test = np.array(X_test)
+	# X_test = []
+	# for i in range(len(test_data)):
+	# 	X_test.append(my_map(test_data[i][:-1]))
+	# X_test = np.array(X_test)
 
-	y_test = test_data[:, -1]
+	# y_test = test_data[:, -1]
 
 	# Feature scaling
 	scaler = StandardScaler()
 	X_train_scaled = scaler.fit_transform(X_train_mapped)
-	X_test_scaled = scaler.transform(X_test)
+	# X_test_scaled = scaler.transform(X_test)
 
 	# Define the parameter grid for tuning
 	param_grid = {
@@ -59,11 +59,11 @@ def my_fit( X_train, y_train ):
 
 	# Making predictions with the best model
 	best_model = grid_search.best_estimator_
-	y_pred = best_model.predict(X_test_scaled)
+	# y_pred = best_model.predict(X_test_scaled)
 
-	# Evaluating the model
-	accuracy = accuracy_score(y_test, y_pred)
-	print("Accuracy:", accuracy)
+	# # Evaluating the model
+	# accuracy = accuracy_score(y_test, y_pred)
+	# print("Accuracy:", accuracy)
 
 	w = best_model.coef_
 	b = best_model.intercept_
@@ -78,15 +78,31 @@ def my_map( X ):
 ################################
 #  Non Editable Region Ending  #
 ################################
-	
-	X=np.array(X)
-	d = 1 - 2 * X
-	t = np.ones(32)
-	t = np.cumprod(d[::-1])[::-1]
-	matrix = np.triu(np.outer(t,t),1)
-	feat = matrix[np.triu_indices(matrix.shape[0],1)]
-	feat = np.concatenate((feat,t))
-	del t,d,X
+	X = np.array(X) 
+	  
+	if X.ndim == 1:
+		d = 1 - 2 * X
+		t = np.ones(32)
+		t = np.cumprod(d[::-1])[::-1]
+		matrix = np.triu(np.outer(t, t),1)
+		feat = matrix[np.triu_indices(matrix.shape[0],1)]
+		feat = np.concatenate((feat, t))
+		del t, d, matrix
+    
+	else:
+        
+		for i in range(len(X)):
+			d = 1 - 2 * X[i]
+			t = np.ones(32)
+			t = np.cumprod(d[::-1])[::-1]
+			matrix = np.triu(np.outer(t, t),1)
+			matrix = matrix[np.triu_indices(matrix.shape[0],1)]
+			matrix = np.concatenate((matrix, t))
+			if i == 0:
+				feat = matrix
+			else:
+				feat = np.vstack((feat, matrix))
+			del t, d, matrix 
 	# Use this method to create features.
 	# It is likely that my_fit will internally call my_map to create features for train points
 	
